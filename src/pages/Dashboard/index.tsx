@@ -1,9 +1,14 @@
 import React from "react";
-import { View } from "react-native";
+import { View, Button } from "react-native";
+import {useAuth} from "../../hooks/auth";
 
 const Dashboard: React.FC = () => {
+    const {signOut} = useAuth();
+
     return (
-        <View/>
+        <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Button title={"Log out"} onPress={signOut}/>
+        </View>
     );
 }
 

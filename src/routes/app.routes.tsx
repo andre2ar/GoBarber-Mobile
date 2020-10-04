@@ -5,10 +5,10 @@ import Dashboard from "../pages/Dashboard";
 
 const Auth = createStackNavigator();
 
-const AuthRoutes: React.FC = () => (
+const AppRoutes: React.FC = () => (
     <Auth.Navigator
         screenOptions={{
-            //headerShown: false,
+            headerShown: false,
             cardStyle: {
                 backgroundColor: '#312e38'
             }
@@ -18,4 +18,4 @@ const AuthRoutes: React.FC = () => (
     </Auth.Navigator>
 );
 
-export default AuthRoutes;
+export default AppRoutes;

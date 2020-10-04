@@ -20,6 +20,7 @@ import logoImg from '../../assets/logo.png';
 import {Form} from "@unform/mobile";
 import {FormHandles} from "@unform/core";
 import getValidationError from "../../utils/getValidationError";
+import {useAuth} from "../../hooks/auth";
 
 interface SignInFormData {
     email: string;
@@ -30,6 +31,7 @@ const SignIn: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
     const passwordInputRef = useRef<TextInput>(null);
     const navigation = useNavigation();
+    const {signIn} = useAuth();
 
     const handleSubmit = useCallback(async (data: SignInFormData) => {
         try {
@@ -44,6 +46,11 @@ const SignIn: React.FC = () => {
 
             await schema.validate(data, {
                 abortEarly: false
+            });
+
+            await signIn({
+                email: data.email,
+                password: data.password,
             });
         } catch (err) {
             if(err instanceof Yup.ValidationError) {
