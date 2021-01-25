@@ -2,6 +2,8 @@ import React, {useCallback, useEffect, useState} from "react";
 import {useNavigation} from "@react-navigation/native";
 import api from "../../services/api";
 import {useAuth} from "../../hooks/auth";
+import Icon from 'react-native-vector-icons/Feather';
+
 import {
     Container,
     Header,
@@ -10,6 +12,13 @@ import {
     ProfileButton,
     UserAvatar,
     ProvidersList,
+    ProviderContainer,
+    ProviderAvatar,
+    ProviderInfo,
+    ProviderName,
+    ProviderMeta,
+    ProviderMetaText,
+    ProvidersListTitle,
 } from './styles';
 
 export interface Provider {
@@ -33,6 +42,10 @@ const Dashboard: React.FC = () => {
         navigate('Profile');
     }, []);
 
+    const navigateToCreateAppointment = useCallback((providerId: string) => {
+        navigate('CreateAppointment', { providerId });
+    }, []);
+
     return (
         <Container>
             <Header>
@@ -51,8 +64,34 @@ const Dashboard: React.FC = () => {
             <ProvidersList
                 data={providers}
                 keyExtractor={(provider: Provider) => provider.id}
-                renderItem={({item}) => (
-                    <UserName>{item.name}</UserName>
+                ListHeaderComponent={
+                    <ProvidersListTitle>
+                        Barbers
+                    </ProvidersListTitle>
+                }
+                renderItem={({item: provider}) => (
+                    <ProviderContainer onPress={() => navigateToCreateAppointment(provider.id)}>
+                        <ProviderAvatar source={{
+                            uri: provider.avatar_url
+                                ?? `https://ui-avatars.com/api/?name=${provider.name}`
+                        }}/>
+
+                        <ProviderInfo>
+                            <ProviderName>
+                                {provider.name}
+                            </ProviderName>
+
+                            <ProviderMeta>
+                                <Icon name={'calendar'} size={14} color={"#ff9000"}/>
+                                <ProviderMetaText>Monday to friday</ProviderMetaText>
+                            </ProviderMeta>
+
+                            <ProviderMeta>
+                                <Icon name={'clock'} size={14} color={"#ff9000"}/>
+                                <ProviderMetaText>8am to 6pm</ProviderMetaText>
+                            </ProviderMeta>
+                        </ProviderInfo>
+                    </ProviderContainer>
                 )}
             />
         </Container>
