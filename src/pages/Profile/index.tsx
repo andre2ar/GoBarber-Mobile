@@ -22,7 +22,7 @@ interface ProfileFormData {
 }
 
 const Profile: React.FC = () => {
-    const {user, updateUser} = useAuth();
+    const {user, updateUser, signOut} = useAuth();
     const navigation = useNavigation();
 
     const formRef = useRef<FormHandles>(null);
@@ -202,6 +202,10 @@ const Profile: React.FC = () => {
                             formRef.current?.submitForm();
                         }}>
                             Confirm changes
+                        </Button>
+
+                        <Button danger={true} onPress={signOut}>
+                            Log out
                         </Button>
                     </Container>
                 </KeyboardAvoidingView>
