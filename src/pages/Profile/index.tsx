@@ -11,6 +11,7 @@ import Input from "../../components/Input";
 import Button from "../../components/Button";
 import {useAuth} from "../../hooks/auth";
 import Icon from 'react-native-vector-icons/Feather';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 interface ProfileFormData {
     name: string;
@@ -83,12 +84,33 @@ const Profile: React.FC = () => {
         }
     }, [navigation]);
 
+    const handleUpdateAvatar = useCallback(() => {
+        launchImageLibrary({
+            mediaType: 'photo',
+            includeBase64: false,
+        }, image => {
+            if(!image.uri) {
+                return;
+            }
+
+            const data = new FormData();
+            data.append('avatar', {
+                type: image.type,
+                name: image.fileName,
+                uri: image.uri
+            });
+
+            api.patch('/users/avatar', data).then(async response => {
+                await updateUser(response.data);
+            }).catch(response => {
+                Alert.alert('Error', "Try again in some minutes");
+            });
+        });
+    }, []);
+
     return (
         <>
-            <ScrollView
-                keyboardShouldPersistTaps={"handled"}
-                contentContainerStyle={{flex: 1}}
-            >
+            <ScrollView keyboardShouldPersistTaps={"handled"}>
                 <KeyboardAvoidingView
                     style={{ flex: 1 }}
                     behavior={Platform.OS === 'ios' ? 'padding' : 'undefined'}
@@ -98,7 +120,7 @@ const Profile: React.FC = () => {
                         <BackButton onPress={handleGoBack}>
                             <Icon name={"chevron-left"} size={24} color={"#999591"}/>
                         </BackButton>
-                        <UserAvatarButton onPress={() => {}}>
+                        <UserAvatarButton onPress={handleUpdateAvatar}>
                             <UserAvatar source={{uri: user.avatar_url ??
                                     `https://ui-avatars.com/api/?name=${user.name}`}} />
                         </UserAvatarButton>
